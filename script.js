@@ -114,45 +114,65 @@ function debounce(fn, wait = 200) {
     };
 }
 
+async function getAbilityName(a) {
+    try {
+        const res = await fetch(a.ability.url);
+        if (!res.ok) return a.ability.name;
+        const data = await res.json();
+        const deName = data.names.find(n => n.language.name === 'de')?.name;
+        return deName || a.ability.name;
+    } catch {
+        return a.ability.name;
+    }
+}
+
+async function getAbilityNames(abilities) {
+    const promises = abilities.map(getAbilityName);
+    return Promise.all(promises);
+}
+
+function getGenus(s) {
+    if (!Array.isArray(s.genera)) return null;
+    const de = s.genera.find(g => g.language.name === 'de');
+    const en = s.genera.find(g => g.language.name === 'en');
+    return de?.genus || en?.genus || null;
+}
+
 async function fetchPokemonOfficialData(id) {
     const base = "https://pokeapi.co/api/v2";
     try {
-        const [pokemonRes, speciesRes] = await Promise.all([
-            fetch(`${base}/pokemon/${id}`),
-            fetch(`${base}/pokemon-species/${id}`)
-        ]);
+        const [pokemonRes, speciesRes] = await Promise.all([fetch(`${base}/pokemon/${id}`), fetch(`${base}/pokemon-species/${id}`)]);
         if (!pokemonRes.ok || !speciesRes.ok) throw new Error("API error");
         const p = await pokemonRes.json();
         const s = await speciesRes.json();
         const height = typeof p.height === "number" ? `${(p.height / 10).toFixed(1)} m` : null;
         const weight = typeof p.weight === "number" ? `${(p.weight / 10).toFixed(1)} kg` : null;
-
-        // Fetch German ability names
-        const abilityPromises = p.abilities.map(async (a) => {
-            try {
-                const res = await fetch(a.ability.url);
-                if (!res.ok) return a.ability.name;
-                const data = await res.json();
-                const deName = data.names.find(n => n.language.name === 'de')?.name;
-                return deName || a.ability.name;
-            } catch {
-                return a.ability.name;
-            }
-        });
-        const abilities = await Promise.all(abilityPromises);
-
-        let genus = null;
-        if (Array.isArray(s.genera)) {
-            const de = s.genera.find(g => g.language && g.language.name === "de");
-            const en = s.genera.find(g => g.language && g.language.name === "en");
-            genus = de ? de.genus : (en ? en.genus : null);
-        }
+        const abilities = await getAbilityNames(p.abilities);
+        const category = getGenus(s);
         const evolutionChainUrl = s.evolution_chain?.url || null;
-        return { height, weight, abilities, category: genus, evolutionChainUrl };
+        return { height, weight, abilities, category, evolutionChainUrl };
     } catch (err) {
         console.warn("PokéAPI fetch error for", id, err);
         return { height: null, weight: null, abilities: [], category: null, evolutionChainUrl: null };
     }
+}
+
+function buildChain(data) {
+    const chain = [];
+    let current = data.chain;
+    while (current) {
+        const speciesName = current.species.name;
+        const idMatch = current.species.url.match(/\/(\d+)\/$/);
+        const id = idMatch ? parseInt(idMatch[1]) : null;
+        const localP = pokemons.find(p => p.id === id);
+        chain.push({
+            id,
+            name: localP ? localP.name : speciesName,
+            image: localP ? localP.image : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
+        });
+        current = current.evolves_to[0];
+    }
+    return chain;
 }
 
 async function fetchEvolutionChain(url) {
@@ -161,24 +181,24 @@ async function fetchEvolutionChain(url) {
         const res = await fetch(url);
         if (!res.ok) throw new Error("API error");
         const data = await res.json();
-        const chain = [];
-        let current = data.chain;
-        while (current) {
-            const speciesName = current.species.name;
-            const idMatch = current.species.url.match(/\/(\d+)\/$/);
-            const id = idMatch ? parseInt(idMatch[1]) : null;
-            const localP = pokemons.find(p => p.id === id);
-            chain.push({
-                id,
-                name: localP ? localP.name : speciesName,
-                image: localP ? localP.image : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`
-            });
-            current = current.evolves_to[0];
-        }
-        return chain;
+        return buildChain(data);
     } catch (err) {
         console.warn("Evolution chain fetch error:", err);
         return [];
+    }
+}
+
+async function enrichSingle(p) {
+    try {
+        const official = await fetchPokemonOfficialData(p.id);
+        p.height = official.height || p.height || null;
+        p.weight = official.weight || p.weight || null;
+        p.abilities = official.abilities.length ? official.abilities : (p.abilities || []);
+        p.category = official.category || p.category || null;
+        p.evolutionChainUrl = official.evolutionChainUrl;
+        p.evolutions = await fetchEvolutionChain(p.evolutionChainUrl);
+    } catch (e) {
+        console.warn("Enrich failed for", p.id, e);
     }
 }
 
@@ -188,47 +208,30 @@ async function enrichAll(maxConcurrent = 6) {
     const workers = Array.from({ length: maxConcurrent }, async () => {
         while (queue.length) {
             const p = queue.shift();
-            try {
-                const official = await fetchPokemonOfficialData(p.id);
-                p.height = official.height || p.height || null;
-                p.weight = official.weight || p.weight || null;
-                p.abilities = (official.abilities && official.abilities.length) ? official.abilities : (p.abilities || []);
-                p.category = official.category || p.category || null;
-                p.evolutionChainUrl = official.evolutionChainUrl;
-                p.evolutions = await fetchEvolutionChain(p.evolutionChainUrl);
-            } catch (e) {
-                console.warn("Enrich failed for", p.id, e);
-            }
+            await enrichSingle(p);
         }
     });
     await Promise.all(workers);
     enriched = true;
 }
 
+function addTypesToCard(card, types) {
+    if (!types) return;
+    const t = Array.isArray(types) ? types : [types];
+    t.forEach(type => {
+        const cls = typeToClassName(type);
+        if (cls) card.classList.add(cls);
+    });
+}
+
 function createCard(pokemon) {
     const card = document.createElement("article");
     card.className = "card";
-    if (Array.isArray(pokemon.type)) {
-        pokemon.type.forEach(t => {
-            const cls = typeToClassName(t);
-            if (cls) card.classList.add(cls);
-        });
-    } else if (pokemon.type) {
-        const cls = typeToClassName(pokemon.type);
-        if (cls) card.classList.add(cls);
-    }
+    addTypesToCard(card, pokemon.type);
     card.tabIndex = 0;
-    card.innerHTML = `
-        <img class="sprite" src="${pokemon.image}" alt="${pokemon.name} sprite" loading="lazy" />
-        <div class="card-body">
-            <h3 class="p-name">${pokemon.name}</h3>
-            <p class="p-types">${(pokemon.type || []).join(", ")}</p>
-        </div>
-    `;
+    card.innerHTML = `<img class="sprite" src="${pokemon.image}" alt="${pokemon.name} sprite" loading="lazy" /><div class="card-body"><h3 class="p-name">${pokemon.name}</h3><p class="p-types">${(pokemon.type || []).join(", ")}</p></div>`;
     card.addEventListener("click", () => openDialog(pokemon));
-    card.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") openDialog(pokemon);
-    });
+    card.addEventListener("keydown", e => e.key === "Enter" && openDialog(pokemon));
     return card;
 }
 
@@ -247,69 +250,90 @@ function renderPokemons(list = currentList) {
     loadMoreBtn.style.display = (displayedCount >= list.length) ? "none" : "inline-block";
 }
 
-function openDialog(p) {
-    if (!dialog) return;
+function setDialogBasic(p) {
     dialogImg.src = p.image;
     dialogImg.alt = p.name;
     dialogName.textContent = p.name;
     dialogNumber.textContent = `#${String(p.id).padStart(3, "0")}`;
+}
 
+function setDialogEntry(p) {
     const meta = [];
     if (p.category) meta.push(`Kategorie: ${p.category}`);
     dialogEntry.textContent = `${p.description || ""}${meta.length ? `\n\n${meta.join(" • ")}` : ""}`;
+}
 
+function setDialogTypes(p) {
     dialogTypes.innerHTML = "";
-    if (p.type && p.type.length) {
-        p.type.forEach(t => {
-            const tag = document.createElement("span");
-            const cls = typeToClassName(t);
-            tag.className = `type-tag ${cls}`;
-            tag.textContent = t;
-            dialogTypes.appendChild(tag);
-        });
-    }
+    if (!p.type || !p.type.length) return;
+    p.type.forEach(t => {
+        const tag = document.createElement("span");
+        const cls = typeToClassName(t);
+        tag.className = `type-tag ${cls}`;
+        tag.textContent = t;
+        dialogTypes.appendChild(tag);
+    });
+}
 
+function createAbilityCell(a) {
+    const td = document.createElement("td");
+    td.textContent = a;
+    return td;
+}
+
+function setDialogAbilities(p) {
     dialogStats.innerHTML = "";
-    if (p.abilities && p.abilities.length) {
-        const table = document.createElement("table");
-        table.className = "ability-table";
-        const row = document.createElement("tr");
-        p.abilities.forEach(a => {
-            const td = document.createElement("td");
-            td.textContent = a;
-            row.appendChild(td);
-        });
-        table.appendChild(row);
-        dialogStats.appendChild(table);
-    } else {
+    if (!p.abilities || !p.abilities.length) {
         dialogStats.textContent = "Keine Fähigkeiten bekannt.";
+        return;
     }
+    const table = document.createElement("table");
+    table.className = "ability-table";
+    const row = document.createElement("tr");
+    p.abilities.forEach(a => row.appendChild(createAbilityCell(a)));
+    table.appendChild(row);
+    dialogStats.appendChild(table);
+}
 
+function createEvoItem(evo) {
+    const evoItem = document.createElement("div");
+    evoItem.className = "evo-item";
+    const img = document.createElement("img");
+    img.src = evo.image;
+    img.alt = evo.name;
+    img.className = "evo-sprite";
+    const nameSpan = document.createElement("span");
+    nameSpan.textContent = evo.name;
+    evoItem.appendChild(img);
+    evoItem.appendChild(nameSpan);
+    return evoItem;
+}
+
+function setDialogEvolutions(p) {
     dialogEvolution.innerHTML = "";
-    if (p.evolutions && p.evolutions.length > 1) {
-        const evoRow = document.createElement("div");
-        evoRow.className = "evo-row";
-        p.evolutions.forEach(evo => {
-            const evoItem = document.createElement("div");
-            evoItem.className = "evo-item";
-            const img = document.createElement("img");
-            img.src = evo.image;
-            img.alt = evo.name;
-            img.className = "evo-sprite";
-            const nameSpan = document.createElement("span");
-            nameSpan.textContent = evo.name;
-            evoItem.appendChild(img);
-            evoItem.appendChild(nameSpan);
-            evoRow.appendChild(evoItem);
-        });
-        dialogEvolution.appendChild(evoRow);
-    } else {
+    if (!p.evolutions || p.evolutions.length <= 1) {
         dialogEvolution.textContent = "Keine Evolutionen.";
+        return;
     }
+    const evoRow = document.createElement("div");
+    evoRow.className = "evo-row";
+    p.evolutions.forEach(evo => evoRow.appendChild(createEvoItem(evo)));
+    dialogEvolution.appendChild(evoRow);
+}
 
+function setDialogHeightWeight(p) {
     dialogHeight.textContent = p.height || "—";
     dialogWeight.textContent = p.weight || "—";
+}
 
+function openDialog(p) {
+    if (!dialog) return;
+    setDialogBasic(p);
+    setDialogEntry(p);
+    setDialogTypes(p);
+    setDialogAbilities(p);
+    setDialogEvolutions(p);
+    setDialogHeightWeight(p);
     dialog.showModal();
     const content = dialog.querySelector(".dialog-content");
     if (content) content.focus();
@@ -333,19 +357,15 @@ const handleSearch = debounce((term) => {
     renderPokemons();
 }, 180);
 
-if (searchInput) {
-    searchInput.addEventListener("input", (e) => handleSearch(e.target.value));
-}
-
-if (loadMoreBtn) {
-    loadMoreBtn.addEventListener("click", () => {
+function setupEventListeners() {
+    if (searchInput) searchInput.addEventListener("input", e => handleSearch(e.target.value));
+    if (loadMoreBtn) loadMoreBtn.addEventListener("click", () => {
         displayedCount = Math.min(currentList.length, displayedCount + perPage);
         renderPokemons();
     });
-}
-
-if (closeDialogBtn) {
-    closeDialogBtn.addEventListener("click", closeDialog);
+    if (closeDialogBtn) closeDialogBtn.addEventListener("click", closeDialog);
+    if (dialog) dialog.addEventListener("click", e => { if (e.target === dialog) closeDialog(); });
+    document.addEventListener("keydown", e => { if (e.key === "Escape") closeDialog(); });
 }
 
 async function init() {
@@ -353,12 +373,7 @@ async function init() {
         console.error("Fehlende DOM-Elemente: pokemonGrid, search oder loadMoreBtn.");
         return;
     }
-    dialog.addEventListener("click", (e) => {
-        if (e.target === dialog) closeDialog();
-    });
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeDialog();
-    });
+    setupEventListeners();
     displayedCount = perPage;
     currentList = [...pokemons];
     renderPokemons();

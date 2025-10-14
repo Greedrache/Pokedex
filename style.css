@@ -8,17 +8,27 @@ body {
     min-height: 100vh;
 }
 
+.pokeballimg{
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
 header {
     background: #ffcb05;
     color: #2a75bb;
     text-align: center;
-    padding: 20px;
+    padding: 5px;
     font-size: 24px;
     font-weight: bold;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     position: sticky;
     top: 0;
     z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
 }
 
 #search {
