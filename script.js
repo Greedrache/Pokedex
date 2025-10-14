@@ -78,8 +78,51 @@ const pokemons = [
     { id: 77, name: "Ponita", type: ["Feuer"], description: "Ein flinkes Pferd mit flammender Mähne.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/77.png" },
     { id: 78, name: "Gallopa", type: ["Feuer"], description: "Rennt schneller als ein Auto.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/78.png" },
     { id: 79, name: "Flegmon", type: ["Wasser", "Psycho"], description: "Ein träges Pokémon, das oft ins Leere starrt.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/79.png" },
-    { id: 80, name: "Relaxo", type: ["Normal"], description: "Isst täglich über 400 kg Nahrung und schläft fast immer.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png" }
+    { id: 80, name: "Relaxo", type: ["Normal"], description: "Isst täglich über 400 kg Nahrung und schläft fast immer.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png" },
+    { id: 81, name: "Voltobal", type: ["Elektro", "Stahl"], description: "Es schwebt durch die Luft und erzeugt starke Magnetfelder.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/81.png" },
+    { id: 82, name: "Magnetilo", type: ["Elektro", "Stahl"], description: "Drei Voltobal verschmelzen zu einem und verstärken ihre Elektrizität.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/82.png" },
+    { id: 83, name: "Porenta", type: ["Normal", "Flug"], description: "Es trägt eine Lauch als Waffe und ist ein geschickter Kämpfer.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/83.png" },
+    { id: 84, name: "Dodu", type: ["Normal", "Flug"], description: "Es hat zwei Köpfe und rennt unglaublich schnell über die Felder.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/84.png" },
+    { id: 85, name: "Dodri", type: ["Normal", "Flug"], description: "Drei Köpfe ermöglichen es, ständig wachsam zu sein und schnell zu fliehen.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/85.png" },
+    { id: 86, name: "Jurob", type: ["Wasser"], description: "Es lebt in kalten Gewässern und hat eine dicke Fettschicht.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/86.png" },
+    { id: 87, name: "Jugong", type: ["Wasser", "Eis"], description: "Es schwimmt elegant und jagt in eisigen Meeren nach Beute.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/87.png" },
+    { id: 88, name: "Sleima", type: ["Gift"], description: "Es entsteht aus verschmutztem Abfall und verursacht schleimige Pfützen.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/88.png" },
+    { id: 89, name: "Sleimok", type: ["Gift"], description: "Sein giftiger Schleim ist so klebrig, dass nichts entkommen kann.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/89.png" },
+    { id: 90, name: "Muschas", type: ["Wasser"], description: "Es klammert sich an Felsen und wartet auf vorbeiziehende Beute.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/90.png" },
+    { id: 91, name: "Austos", type: ["Wasser", "Eis"], description: "Seine Schale ist hart wie Stahl und schützt vor starken Angriffen.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/91.png" },
+    { id: 92, name: "Nebulak", type: ["Geist", "Gift"], description: "Es ist ein Gaswesen, das in Friedhöfen umgeht und erschreckt.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/92.png" },
+    { id: 93, name: "Alpollo", type: ["Geist", "Gift"], description: "Es leckt an seinen Opfern und saugt langsam ihre Energie ab.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/93.png" },
+    { id: 94, name: "Gengar", type: ["Geist", "Gift"], description: "Es versteckt sich in Schatten und bringt Unglück über die Menschen.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/94.png" },
+    { id: 95, name: "Onix", type: ["Gestein", "Boden"], description: "Sein langer Körper bohrt sich durch Berge und verursacht Erdbeben.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/95.png" },
+    { id: 96, name: "Traumato", type: ["Psycho"], description: "Es hypnotisiert seine Opfer und frisst deren Träume im Schlaf.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/96.png" },
+    { id: 97, name: "Hypno", type: ["Psycho"], description: "Mit seiner Pendeluhr versetzt es Feinde in einen tiefen Schlaf.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/97.png" },
+    { id: 98, name: "Krabby", type: ["Wasser"], description: "Seine starken Scheren können Kokosnüsse knacken und Boote zerstören.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/98.png" },
+    { id: 99, name: "Kingler", type: ["Wasser"], description: "Eine Schere ist so groß wie sein Körper und schwer zu heben.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/99.png" },
+    { id: 100, name: "Voltobal", type: ["Elektro"], description: "Es sieht aus wie ein Pokéball und entlädt plötzliche Stromstöße.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/100.png" },
+    { id: 101, name: "Lektrobal", type: ["Elektro"], description: "Es rotiert schnell und explodiert bei Gefahr mit hoher Spannung.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/101.png" },
+    { id: 102, name: "Owei", type: ["Pflanze", "Psycho"], description: "Sechs Eier bewegen sich telepathisch und wachsen zu einem Baum.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/102.png" },
+    { id: 103, name: "Kokowei", type: ["Pflanze", "Psycho"], description: "Drei Köpfe wachsen aus Kokosnüssen und schwingen im tropischen Wind.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/103.png" },
+    { id: 104, name: "Tragosso", type: ["Boden"], description: "Es trägt den Schädel seiner Mutter als Helm zum Schutz.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/104.png" },
+    { id: 105, name: "Knogga", type: ["Boden"], description: "Mit seinem Knochenclub schlägt es gnadenlos auf Gegner ein.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/105.png" },
+    { id: 106, name: "Kicklee", type: ["Kampf"], description: "Seine Beine sind wie Federn und treten mit enormer Kraft.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/106.png" },
+    { id: 107, name: "Nockchan", type: ["Kampf"], description: "Es boxte so viel, dass seine Fäuste wie harte Steine wurden.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/107.png" },
+    { id: 108, name: "Schlurp", type: ["Normal"], description: "Seine Zunge ist zwei Meter lang und leckt alles sauber.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/108.png" },
+    { id: 109, name: "Smogon", type: ["Gift"], description: "Es speit giftigen Rauch aus und verursacht Verschmutzung.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/109.png" },
+    { id: 110, name: "Smogmog", type: ["Gift"], description: "Zwei Köpfe erzeugen doppelt so viel giftigen Nebel.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/110.png" },
+    { id: 111, name: "Rihorn", type: ["Boden", "Gestein"], description: "Es stürmt mit seinem Horn durch Berge und verursacht Lawinen.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/111.png" },
+    { id: 112, name: "Rizeros", type: ["Boden", "Gestein"], description: "Seine Panzerplatte schützt es vor allen Angriffen.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/112.png" },
+    { id: 113, name: "Chaneira", type: ["Normal"], description: "Es legt Eier, die glückliche Babys hervorbringen.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/113.png" },
+    { id: 114, name: "Tangela", type: ["Pflanze"], description: "Seine blauen Ranken verbergen den Körper vollständig.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/114.png" },
+    { id: 115, name: "Kangama", type: ["Normal"], description: "Das Jungtier im Beutel hilft bei Kämpfen mit.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/115.png" },
+    { id: 116, name: "Seeper", type: ["Wasser"], description: "Es schwimmt aufrecht und spuckt Tinte zur Verteidigung.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/116.png" },
+    { id: 117, name: "Seemon", type: ["Wasser"], description: "Seine Stacheln sind giftig und schützen vor Feinden.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/117.png" },
+    { id: 150, name: "Mewtu", type: ["Psycho"], description: "Es wurde künstlich erschaffen und besitzt immense psychische Kräfte.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png" },
+    { id: 384, name: "Rayquaza", type: ["Drache", "Flug"], description: "Es lebt in der Ozonschicht und balanciert das Wetter der Welt.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/384.png" },
+    { id: 445, name: "Knakrack", type: ["Drache", "Boden"], description: "Es fliegt mit Überschallgeschwindigkeit und gräbt sich durch den Boden.", image: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/445.png" }
 ];
+
+// Hinweis: Dein bestehendes Array hat einen Fehler bei ID 80 (Relaxo ist eigentlich ID 143). Du könntest das korrigieren, indem du id: 80 zu id: 143 änderst und die image passt schon.
+
 
 const grid = document.getElementById("pokemonGrid");
 const searchInput = document.getElementById("search");
