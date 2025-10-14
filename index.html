@@ -7,14 +7,19 @@
     <title>Pokémon Übersicht</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="./img/pokemon-ball.png">
+    <script src="db.json"></script>
 </head>
 
 <body>
-    <header><img class="pokeballimg" src="./img/pokemon-ball.png" alt="Pokeball"><h1>Pokémon Übersicht</h1></header>
+    <header><img class="pokeballimg" src="./img/pokemon-ball.png" alt="Pokeball">
+        <h1>Pokémon Übersicht</h1>
+    </header>
     <input type="text" id="search" placeholder="Nach Pokémon suchen..." />
-    <div class="grid" id="pokemonGrid"></div>
-    <div style="text-align:center; padding-bottom: 30px;">
-        <button id="loadMoreBtn" class="load-btn">Weitere Pokémon laden</button>
+    <main>
+        <div class="grid" id="pokemonGrid"></div>
+        <div style="text-align:center; padding-bottom: 30px;">
+    <button id="loadMoreBtn" class="load-btn">Weitere Pokémon laden</button>
+      </main>
     </div>
     <dialog id="dialog">
         <div class="dialog-content">
@@ -65,5 +70,4 @@
     </footer>
 </body>
 <script src="script.js"></script>
-
 </html>
