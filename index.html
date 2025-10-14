@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pokémon Übersicht</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="./img/pokemon-ball.png">
+</head>
+
+<body>
+    <header>Pokémon Übersicht</header>
+    <input type="text" id="search" placeholder="Nach Pokémon suchen..." />
+    <div class="grid" id="pokemonGrid"></div>
+    <div style="text-align:center; padding-bottom: 30px;">
+        <button id="loadMoreBtn" class="load-btn">Weitere Pokémon laden</button>
+    </div>
+    <dialog id="dialog">
+        <div class="dialog-content">
+            <img id="dialog-img" src="" alt="Pokemon">
+            <p id="dialog-number" class="small-number"></p>
+            <h2 id="dialog-name"></h2>
+            <div id="dialog-types" class="type-row"></div>
+            <h3>Pokedex Entry</h3>
+            <p id="dialog-entry"></p>
+            <table class="poke-stats">
+                <tr>
+                    <th>
+                        <h3>Höhe</h3>
+                    </th>
+                    <th>
+                        <h3>Gewicht</h3>
+                    </th>
+                </tr>
+                <tr>
+                    <td class="bg-headline" id="dialog-height"></td>
+                    <td class="bg-headline" id="dialog-weight"></td>
+                </tr>
+                <tr>
+                    <th colspan="2">
+                        <h3>Fähigkeiten</h3>
+                    </th>
+                </tr>
+                <tr>
+                    <td colspan="2" id="dialog-stats"></td>
+                </tr>
+                <tr>
+                    <th colspan="2">
+                        <h3>Entwicklung</h3>
+                    </th>
+                </tr>
+                <tr>
+                    <td colspan="2" id="dialog-evolution"></td>
+                </tr>
+            </table>
+            <button class="close-dialog" id="close-dialog">Schließen</button>
+        </div>
+    </dialog>
+    <footer>
+        <p>Erstellt von: Tim Thiele</p>
+        <p>Quellen: <a href="https://pokeapi.co/" target="_blank">PokeAPI</a>, <a
+                href="https://www.flaticon.com/free-icons/pokemon" title="pokemon icons" target="_blank">Pokemon icons
+                created by Freepik - Flaticon</a></p>
+    </footer>
+</body>
+<script src="script.js"></script>
+
+</html>
