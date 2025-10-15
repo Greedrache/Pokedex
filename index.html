@@ -18,8 +18,8 @@
     <main>
         <div class="grid" id="pokemonGrid"></div>
         <div style="text-align:center; padding-bottom: 30px;">
-    <button id="loadMoreBtn" class="load-btn">Weitere Pokémon laden</button>
-      </main>
+            <button id="loadMoreBtn" class="load-btn">Weitere Pokémon laden</button>
+    </main>
     </div>
     <dialog id="dialog">
         <div class="dialog-content">
@@ -59,7 +59,11 @@
                     <td colspan="2" id="dialog-evolution"></td>
                 </tr>
             </table>
-            <button class="close-dialog" id="close-dialog">Schließen</button>
+            <div class="dialog-buttons">
+                <button id="prev-btn" class="nav-dialog">&lt;</button>
+                <button class="close-dialog" id="close-dialog">Schließen</button>
+                <button id="next-btn" class="nav-dialog">&gt;</button>
+            </div>
         </div>
     </dialog>
     <footer>
@@ -70,4 +74,5 @@
     </footer>
 </body>
 <script src="script.js"></script>
+
 </html>
