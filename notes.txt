@@ -1,6 +1,0 @@
-1. Main Content begrenzen (fertig)
-2. Funktionen sind nicht alle nur 14 Zeilen lang
-3. Max 400 Zeilen lang und db.js für die Pokemons (fertig)
-4. Alle Pokemon sollen da sein (fertig)
-5. Man kann mit Pfeilbutton zum nächsten Pokemon (fertig)
-6. Sollen erst geladen werden wenn man auf den Laden button klickt
