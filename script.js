@@ -17,7 +17,6 @@ const prevBtn = document.getElementById("prev-btn");
 const nextBtn = document.getElementById("next-btn");
 const spinner = document.getElementById("spinner");
 
-// === Typfarben ===
 const typeGradients = {
     Fire: "#f08030", Water: "#6890f0", Grass: "#78c850", Electric: "#f8d030",
     Normal: "#a8a878", Ground: "#e0c068", Fighting: "#c03028", Poison: "#a040a0",
@@ -26,7 +25,6 @@ const typeGradients = {
     Steel: "#b8b8d0", Fairy: "#ee99ac"
 };
 
-// === Globals ===
 let pokemons = [];
 let allPokemonNames = [];
 let currentList = [];
@@ -34,7 +32,6 @@ let displayedCount = 0;
 let currentDialogIndex = null;
 let nextUrl = "https://pokeapi.co/api/v2/pokemon?limit=20";
 
-// === Helferfunktionen ===
 function shadeColor(color, percent) {
     const num = parseInt(color.slice(1), 16);
     const amt = Math.round(2.55 * percent);
@@ -65,7 +62,6 @@ function applyCardColors() {
     });
 }
 
-// === Fetch Pokémon Details ===
 async function fetchPokemons() {
     if (!nextUrl) return [];
     spinner.style.display = "block";
@@ -127,7 +123,6 @@ async function fetchPokedexEntry(speciesUrl) {
     }
 }
 
-// === UI Funktionen ===
 function createCard(pokemon) {
     const card = document.createElement("article");
     card.className = "card";
@@ -150,7 +145,6 @@ function renderPokemons(list = currentList) {
     loadMoreBtn.style.display = (displayedCount >= list.length && !nextUrl) ? "none" : "inline-block";
 }
 
-// === Dialog ===
 async function openDialog(pokemon) {
     currentDialogIndex = currentList.findIndex(p => p.id === pokemon.id);
     dialog.showModal();
@@ -167,8 +161,6 @@ async function openDialog(pokemon) {
     }, 50);
 }
 
-
-// === Search ===
 searchInput.addEventListener("input", async e => {
     const term = e.target.value.toLowerCase();
     if (!term) { currentList = [...pokemons]; displayedCount = 20; renderPokemons(); loadMoreBtn.style.display = "inline-block"; return; }
@@ -187,7 +179,6 @@ searchInput.addEventListener("input", async e => {
 });
 
 
-// === Navigation & Load More ===
 closeDialogBtn.addEventListener("click", () => dialog.close());
 dialog.addEventListener("click", e => { if (e.target === dialog) dialog.close(); });
 prevBtn.addEventListener("click", () => openDialog(currentList[currentDialogIndex > 0 ? currentDialogIndex - 1 : currentList.length - 1]));
@@ -200,7 +191,6 @@ loadMoreBtn.addEventListener("click", async () => {
     renderPokemons();
 });
 
-// === Init ===
 (async function init() {
     spinner.style.display = "block";
     await fetchAllPokemonNames();
